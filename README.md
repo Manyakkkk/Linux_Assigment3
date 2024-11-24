@@ -1,10 +1,6 @@
 # LINUX ASSIGNMENT 3
 
----
-
 ## PART - 1
-
----
 
 ## Task 1 -> Create a system user ##
 
@@ -24,7 +20,6 @@ Here; we useradd `useradd` to create a new user account on system.
 
 ```
 sudo mkdir -p /var/lib/webgen/bin /var/lib/webgen/HTML
-
 ```
 
 Here, `-p` will ensure that the parent directories are created if they dont really exists.For example, if `var/lib/webgen` doesn't exists, it will be created along with the subdirectories ( `bin` and `HTML` ).
@@ -33,14 +28,12 @@ Here, `-p` will ensure that the parent directories are created if they dont real
 
 ```
 sudo touch /var/lib/webgen/bin/generate_index /var/lib/webgen/HTML/index.html
-
 ```
 
 4. Change the ownership of the above two files created to webgen user within the webgen group.
 
 ```
 sudo chown -R webgen:webgen /var/lib/webgen
-
 ```
 
 Here, 
@@ -51,4 +44,69 @@ Here,
 ---
 
 ## Task 2 -> Create the .service and .timer files. ##
+
+1. Create a service file which will run the **generate_index** script using the webgen user and group.
+
+```
+sudo vim /etc/systemd/system/generate-index.service
+```
+
+2. Create a timer file which will run the service file everyday at 05:00, regardless of year, month or week.
+
+```
+sudo vim /etc/systemd/system/generate-index.timer
+```
+
+3. Refresh the systemd's configuration to make it aware of any new or altered changes in both the .service and .timer files.
+
+```
+sudo systemctl daemon-reload
+```
+
+4. Enable the timer to make sure it starts automatically.
+
+```
+sudo systemctl enable generate-index.timer
+```
+
+5. Manually start the service to test it is running without errors.
+
+```
+sudo systemctl start generate-index.timer
+```
+
+6. To verify whether the script is running correctly:
+
+```
+sudo systemctl status generate-index.timer
+```
+
+The output will look like this:
+<image>
+
+7. Do the exact same steps to enable and start the service unit file.
+
+```
+sudo systemctl enable generate-index.service
+sudo systemctl start generate-index.service
+```
+
+8. Verify the execution of the script.
+
+```
+sudo systemctl status generate-index.service
+```
+
+The output should look like this:
+<image>
+
+9. Confirm the successful execution of the file or debug any issues.
+
+```
+sudo journalctl -u generate-index.service
+```
+
+- this displays the output of the service as shown in the given image.
+<image>
+
 
